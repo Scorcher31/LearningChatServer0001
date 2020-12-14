@@ -2,11 +2,10 @@ package Server;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.JFrame;
 
 public class ViewGuiServer {
     private JFrame frame = new JFrame("Запуск сервера");
@@ -31,6 +30,7 @@ public class ViewGuiServer {
         frame.pack();
         frame.setLocationRelativeTo(null); // при запуске отображает окно по центру экрана
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
         //класс обработки события при закрытии окна приложения Сервера
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -41,19 +41,11 @@ public class ViewGuiServer {
         });
         frame.setVisible(true);
 
-        buttonStartServer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int port = getPortFromOptionPane();
-                server.startServer(port);
-            }
+        buttonStartServer.addActionListener(e -> {
+            int port = getPortFromOptionPane();
+            server.startServer(port);
         });
-        buttonStopServer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                server.stopServer();
-            }
-        });
+        buttonStopServer.addActionListener(e -> server.stopServer());
     }
 
     //метод который добавляет в текстовое окно новое сообщение
@@ -79,4 +71,5 @@ public class ViewGuiServer {
             }
         }
     }
+
 }
