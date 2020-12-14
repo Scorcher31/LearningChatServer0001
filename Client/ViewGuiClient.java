@@ -2,14 +2,12 @@ package Client;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Set;
 
 public class ViewGuiClient {
-    private final Client client;
+    private Client client;
     private JFrame frame = new JFrame("Чат");
     private JTextArea messages = new JTextArea(30, 20);
     private JTextArea users = new JTextArea(30, 15);
@@ -20,10 +18,11 @@ public class ViewGuiClient {
 
     public ViewGuiClient(Client client) {
         this.client = client;
+        initFrameClient();
     }
 
     //метод, инициализирующий графический интерфейс клиентского приложения
-    protected void initFrameClient() {
+    public void initFrameClient() {
         messages.setEditable(false);
         users.setEditable(false);
         frame.add(new JScrollPane(messages), BorderLayout.CENTER);
@@ -35,6 +34,7 @@ public class ViewGuiClient {
         frame.pack();
         frame.setLocationRelativeTo(null); // при запуске отображает окно по центру экрана
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
         //класс обработки события при закрытии окна приложения Сервера
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -46,24 +46,11 @@ public class ViewGuiClient {
             }
         });
         frame.setVisible(true);
-        buttonDisable.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                client.disableClient();
-            }
-        });
-        buttonConnect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                client.connectToServer();
-            }
-        });
-        textField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                client.sendMessageOnServer(textField.getText());
-                textField.setText("");
-            }
+        buttonDisable.addActionListener(e -> client.disableClient());
+        buttonConnect.addActionListener(e -> client.connectToServer());
+        textField.addActionListener(e -> {
+            client.sendMessageOnServer(textField.getText());
+            textField.setText("");
         });
     }
 
@@ -77,14 +64,16 @@ public class ViewGuiClient {
         if (client.isConnect()) {
             StringBuilder text = new StringBuilder("Список пользователей:\n");
             for (String user : listUsers) {
-                text.append(user + "\n");
+                text
+                        .append(user)
+                        .append("\n");
             }
             users.append(text.toString());
         }
     }
 
     //вызывает окно для ввода адреса сервера
-    protected String getServerAddressFromOptionPane() {
+    public String getServerAddressFromOptionPane() {
         while (true) {
             String addressServer = JOptionPane.showInputDialog(
                     frame, "Введите адрес сервера:",
@@ -96,7 +85,7 @@ public class ViewGuiClient {
     }
 
     //вызывает окно для ввода порта сервера
-    protected int getPortServerFromOptionPane() {
+    public int getPortServerFromOptionPane() {
         while (true) {
             String port = JOptionPane.showInputDialog(
                     frame, "Введите порт сервера:",
@@ -115,7 +104,7 @@ public class ViewGuiClient {
     }
 
     //вызывает окна для ввода имени пользователя
-    protected String getNameUser() {
+    public String getNameUser() {
         return JOptionPane.showInputDialog(
                 frame, "Введите имя пользователя:",
                 "Ввод имени пользователя",
@@ -124,7 +113,7 @@ public class ViewGuiClient {
     }
 
     //вызывает окно ошибки с заданным текстом
-    protected void errorDialogWindow(String text) {
+    public void errorDialogWindow(String text) {
         JOptionPane.showMessageDialog(
                 frame, text,
                 "Ошибка", JOptionPane.ERROR_MESSAGE

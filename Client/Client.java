@@ -1,7 +1,6 @@
 package Client;
 
 import Connection.*;
-
 import java.io.IOException;
 import java.net.Socket;
 
@@ -9,7 +8,7 @@ public class Client {
     private Connection connection;
     private static ModelGuiClient model;
     private static ViewGuiClient gui;
-    private volatile boolean isConnect = false; //флаг отобаржающий состояние подключения клиента  серверу
+    private volatile boolean isConnect = false;
 
     public boolean isConnect() {
         return isConnect;
@@ -24,9 +23,8 @@ public class Client {
         Client client = new Client();
         model = new ModelGuiClient();
         gui = new ViewGuiClient(client);
-        gui.initFrameClient();
-        while (true) {
-            if (client.isConnect()) {
+        while(true) {
+            if(client.isConnect()) {
                 client.nameUserRegistration();
                 client.receiveMessageFromServer();
                 client.setConnect(false);
@@ -36,20 +34,17 @@ public class Client {
 
     //метод подключения клиента  серверу
     protected void connectToServer() {
-        //если клиент не подключен  сервере то..
-        if (!isConnect) {
-            while (true) {
+        if(!isConnect) {
+            while(true) {
                 try {
-                    //вызываем окна ввода адреса, порта сервера
-                    String addressServer = gui.getServerAddressFromOptionPane();
+                    String adressServer = gui.getServerAddressFromOptionPane();
                     int port = gui.getPortServerFromOptionPane();
-                    //создаем сокет и объект connection
-                    Socket socket = new Socket(addressServer, port);
+                    Socket socket = new Socket(adressServer, port);
                     connection = new Connection(socket);
                     isConnect = true;
                     gui.addMessage("Сервисное сообщение: Вы подключились к серверу.\n");
                     break;
-                } catch (Exception e) {
+                } catch(Exception e) {
                     gui.errorDialogWindow("Произошла ошибка! Возможно Вы ввели не верный адрес сервера или порт. Попробуйте еще раз");
                     break;
                 }
@@ -59,27 +54,28 @@ public class Client {
 
     //метод, реализующий регистрацию имени пользователя со стороны клиентского приложения
     protected void nameUserRegistration() {
-        while (true) {
+        while(true) {
             try {
                 Message message = connection.receive();
                 //приняли от сервера сообщение, если это запрос имени, то вызываем окна ввода имени, отправляем на сервер имя
-                if (message.getTypeMessage() == MessageType.REQUEST_NAME_USER) {
+                if(message.getTypeMessage() == MessageType.REQUEST_NAME_USER) {
                     String nameUser = gui.getNameUser();
                     connection.send(new Message(MessageType.USER_NAME, nameUser));
                 }
-                //если сообщение - имя уже используется, выводим соответствующее оуно с ошибой, повторяем ввод имени
-                if (message.getTypeMessage() == MessageType.NAME_USED) {
+
+                if(message.getTypeMessage() == MessageType.NAME_USED) {
                     gui.errorDialogWindow("Данное имя уже используется, введите другое");
                     String nameUser = gui.getNameUser();
                     connection.send(new Message(MessageType.USER_NAME, nameUser));
                 }
+
                 //если имя принято, получаем множество всех подключившихся пользователей, выходим из цикла
                 if (message.getTypeMessage() == MessageType.NAME_ACCEPTED) {
                     gui.addMessage("Сервисное сообщение: ваше имя принято!\n");
                     model.setUsers(message.getListUsers());
                     break;
                 }
-            } catch (Exception e) {
+            } catch(Exception e) {
                 e.printStackTrace();
                 gui.errorDialogWindow("Произошла ошибка при регистрации имени. Попробуйте переподключиться");
                 try {
@@ -90,7 +86,6 @@ public class Client {
                     gui.errorDialogWindow("Ошибка при закрытии соединения");
                 }
             }
-
         }
     }
 
