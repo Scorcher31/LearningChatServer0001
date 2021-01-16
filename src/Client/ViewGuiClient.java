@@ -1,4 +1,4 @@
-package Client;
+package client;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +62,9 @@ public class ViewGuiClient {
     protected void refreshListUsers(Set<String> listUsers) {
         users.setText("");
         if (client.isConnect()) {
-            StringBuilder text = new StringBuilder("Список пользователей:\n");
+            StringBuilder text = new StringBuilder();
+            text.append(String.format("Всего пользователей: %d\n", listUsers.size()));
+            text.append("Список пользователей:\n");
             for (String user : listUsers) {
                 text
                         .append(user)

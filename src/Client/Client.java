@@ -1,6 +1,6 @@
-package Client;
+package client;
 
-import Connection.*;
+import connection.*;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -73,6 +73,7 @@ public class Client {
                 if (message.getTypeMessage() == MessageType.NAME_ACCEPTED) {
                     gui.addMessage("Сервисное сообщение: ваше имя принято!\n");
                     model.setUsers(message.getListUsers());
+                    model.setName("");
                     break;
                 }
             } catch(Exception e) {
@@ -112,12 +113,14 @@ public class Client {
                     model.addUser(message.getTextMessage());
                     gui.refreshListUsers(model.getUsers());
                     gui.addMessage(String.format("Сервисное сообщение: пользователь %s присоединился к чату.\n", message.getTextMessage()));
+                    gui.addMessage(String.format("На данный момент на сервере %d человек\n", model.getUsers().size()));
                 }
                 //аналогично для отключения других пользователей
                 if (message.getTypeMessage() == MessageType.REMOVED_USER) {
                     model.removeUser(message.getTextMessage());
                     gui.refreshListUsers(model.getUsers());
                     gui.addMessage(String.format("Сервисное сообщение: пользователь %s покинул чат.\n", message.getTextMessage()));
+                    gui.addMessage(String.format("На данный момент на сервере %d человек\n", model.getUsers().size()));
                 }
             } catch (Exception e) {
                 gui.errorDialogWindow("Ошибка при приеме сообщения от сервера.");

@@ -1,16 +1,28 @@
-package Server;
+package server;
 
-import Connection.*;
+import connection.*;
 
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 
 public class Server {
+    private static Server server;
     private ServerSocket serverSocket;
     private static ViewGuiServer gui; //объект класса представления
     private static ModelGuiServer model = new ModelGuiServer(); //объект класса модели
     private static volatile boolean isServerStart = false; //флаг отражающий состояние сервера запущен/остановлен
+
+    private Server() { }
+
+    public static Server getInstance() {
+        if(server == null) {
+            synchronized (Server.class) {
+                server = new Server();
+            }
+        }
+        return server;
+    }
 
     public ServerSocket getServerSocket() {
         return serverSocket;
@@ -74,7 +86,7 @@ public class Server {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-                new ServerThread(socket, model).start();
+                ServerThread.getInstance(socket, model).start();
             } catch (Exception e) {
                 System.out.println("Связь с сервером потеряна.\n");
                 break;
@@ -87,7 +99,7 @@ public class Server {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-                new ServerThread(socket, model).start();
+                ServerThread.getInstance(socket, model).start();
             } catch (Exception e) {
                 gui.refreshDialogWindowServer("Связь с сервером потеряна.\n");
                 break;

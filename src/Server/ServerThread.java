@@ -1,6 +1,6 @@
-package Server;
+package server;
 
-import Connection.*;
+import connection.*;
 
 import java.net.Socket;
 import java.util.Map;
@@ -10,17 +10,31 @@ import java.util.HashSet;
 //класс-поток, который запускается при принятии сервером нового сокетного соединения с клиентом, в конструктор
 //передается объект класса Socket
 public class ServerThread extends Thread{
+    private volatile static ServerThread st;
     private Socket socket;
     private static ModelGuiServer model;
-    private static Server server = new Server();
+    private static Server server = Server.getInstance();
     private static ViewGuiServer gui = new ViewGuiServer(server);
 
-    public ServerThread(Socket socket, ModelGuiServer model) {
+    private ServerThread(Socket socket, ModelGuiServer model) {
         this.socket = socket;
         this.model = model;
     }
 
-     //метод который реализует запрос сервера у клиента имени и добавлении имени в мапу
+    public static ServerThread getInstance(Socket socket, ModelGuiServer model) {
+        if(st == null) {
+            synchronized (ServerThread.class) {
+                st = new ServerThread(socket, model);
+            }
+        }
+        return st;
+    }
+
+    public static void setSt(ServerThread st) {
+        ServerThread.st = st;
+    }
+
+    //метод который реализует запрос сервера у клиента имени и добавлении имени в мапу
     public String requestAndAddingUser(Connection connection) {
         while (true) {
             try {
