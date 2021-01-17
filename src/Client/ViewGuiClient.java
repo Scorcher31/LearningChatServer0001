@@ -34,6 +34,7 @@ public class ViewGuiClient {
         frame.pack();
         frame.setLocationRelativeTo(null); // при запуске отображает окно по центру экрана
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.setForeground(Color.getColor("Blue"));
 
         //класс обработки события при закрытии окна приложения Сервера
         frame.addWindowListener(new WindowAdapter() {
