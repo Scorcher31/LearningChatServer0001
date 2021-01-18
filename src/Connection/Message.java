@@ -7,6 +7,7 @@ public class Message implements Serializable {
     private MessageType typeMessage; //тип сообщения
     private String textMessage; //текст сообщения
     private Set<String> listUsers; //множество имен уже подлючившихся пользователей
+    private String name;
 
     public Message(MessageType typeMessage, String textMessage) {
         this.textMessage = textMessage;
@@ -18,6 +19,13 @@ public class Message implements Serializable {
         this.typeMessage = typeMessage;
         this.textMessage = null;
         this.listUsers = listUsers;
+    }
+
+    public Message(MessageType typeMessage, Set<String> listUsers, String name) {
+        this.typeMessage = typeMessage;
+        this.textMessage = null;
+        this.listUsers = listUsers;
+        this.name = name;
     }
 
     public Message(MessageType typeMessage) {
@@ -37,5 +45,7 @@ public class Message implements Serializable {
     public String getTextMessage() {
         return textMessage;
     }
+
+    public String getName() { return name; }
 
 }

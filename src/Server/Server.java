@@ -113,7 +113,7 @@ public class Server {
                             listUsers.add(users.getKey());
                         }
                         //отправляем клиенту множетство имен всех уже подключившихся пользователей
-                        connection.send(new Message(MessageType.NAME_ACCEPTED, listUsers));
+                        connection.send(new Message(MessageType.NAME_ACCEPTED, listUsers, userName));
                         //отправляем всем клиентам сообщение о новом пользователе
                         sendMessageAllUsers(new Message(MessageType.USER_ADDED, userName));
                         return userName;

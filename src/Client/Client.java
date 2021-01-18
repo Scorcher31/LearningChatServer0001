@@ -73,7 +73,7 @@ public class Client {
                 if (message.getTypeMessage() == MessageType.NAME_ACCEPTED) {
                     gui.addMessage("Сервисное сообщение: ваше имя принято!\n");
                     model.setUsers(message.getListUsers());
-                    model.setName("");
+                    model.setName(message.getName());
                     break;
                 }
             } catch(Exception e) {
@@ -120,7 +120,9 @@ public class Client {
                     model.removeUser(message.getTextMessage());
                     gui.refreshListUsers(model.getUsers());
                     gui.addMessage(String.format("Сервисное сообщение: пользователь %s покинул чат.\n", message.getTextMessage()));
-                    gui.addMessage(String.format("На данный момент на сервере %d человек\n", model.getUsers().size()));
+                    if(!message.getTextMessage().equals(model.getName())) {
+                        gui.addMessage(String.format("На данный момент на сервере %d человек\n", model.getUsers().size()));
+                    }
                 }
             } catch (Exception e) {
                 gui.errorDialogWindow("Ошибка при приеме сообщения от сервера.");
