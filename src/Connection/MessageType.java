@@ -3,6 +3,7 @@ package connection;
 public enum MessageType {
     REQUEST_NAME_USER,
     TEXT_MESSAGE,
+    COMMAND_MESSAGE,
     NAME_ACCEPTED,
     USER_NAME,
     NAME_USED,

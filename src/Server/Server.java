@@ -1,12 +1,11 @@
 package server;
 
 import connection.*;
+import bot.*;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 public class Server {
     private ServerSocket serverSocket;
@@ -87,6 +86,17 @@ public class Server {
         }
     }
 
+    public void printAllNames() {
+        ArrayList<String> users = new ArrayList<>();
+        for (Map.Entry<String, Connection> user : model.getAllUsersMultiChat().entrySet()) {
+            users.add(user.getKey());
+        }
+        Collections.sort(users);
+        for(String user : users) {
+            System.out.println(user);
+        }
+    }
+
     //класс-поток, который запускается при принятии сервером нового сокетного соединения с клиентом, в конструктор
     //передается объект класса Socket
     private class ServerThread extends Thread {
@@ -144,6 +154,13 @@ public class Server {
                         connection.close();
                         gui.refreshDialogWindowServer(String.format("Пользователь с удаленным доступом %s отключился.\n", socket.getRemoteSocketAddress()));
                         break;
+                    }
+                    if (message.getTypeMessage() == MessageType.COMMAND_MESSAGE) {
+                        String commandText = message.getTextMessage();
+                        String[] attributesSet = commandText.split(" -");
+                        if(attributesSet[0] == "--callbot") {
+                            Bot bot = new Bot(Server.this);
+                        }
                     }
                 } catch (Exception e) {
                     gui.refreshDialogWindowServer(String.format("Произошла ошибка при рассылке сообщения от пользователя %s, либо отключился!\n", userName));

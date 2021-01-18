@@ -93,7 +93,12 @@ public class Client {
     //метод отправки сообщения предназначенного для других пользователей на сервер
     protected void sendMessageOnServer(String text) {
         try {
-            connection.send(new Message(MessageType.TEXT_MESSAGE, text));
+            text = text.trim();
+            if(text.charAt(0) == '-' && text.charAt(1) == '-') {
+                connection.send(new Message(MessageType.COMMAND_MESSAGE, text));
+            } else {
+                connection.send(new Message(MessageType.TEXT_MESSAGE, text));
+            }
         } catch (Exception e) {
             gui.errorDialogWindow("Ошибка при отправки сообщения");
         }
