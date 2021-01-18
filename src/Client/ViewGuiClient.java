@@ -15,6 +15,7 @@ public class ViewGuiClient {
     private JTextField textField = new JTextField(40);
     private JButton buttonDisable = new JButton("Отключиться");
     private JButton buttonConnect = new JButton("Подключиться");
+    private JButton pushMessage = new EnterButton();
 
     public ViewGuiClient(Client client) {
         this.client = client;
@@ -28,6 +29,7 @@ public class ViewGuiClient {
         frame.add(new JScrollPane(messages), BorderLayout.CENTER);
         frame.add(new JScrollPane(users), BorderLayout.EAST);
         panel.add(textField);
+        panel.add(pushMessage);
         panel.add(buttonConnect);
         panel.add(buttonDisable);
         frame.add(panel, BorderLayout.SOUTH);
@@ -47,6 +49,7 @@ public class ViewGuiClient {
             }
         });
         frame.setVisible(true);
+        pushMessage.addActionListener(e -> client.pushMessage());
         buttonDisable.addActionListener(e -> client.disableClient());
         buttonConnect.addActionListener(e -> client.connectToServer());
         textField.addActionListener(e -> {
@@ -121,5 +124,9 @@ public class ViewGuiClient {
                 frame, text,
                 "Ошибка", JOptionPane.ERROR_MESSAGE
         );
+    }
+
+    public JTextField getTextField() {
+        return textField;
     }
 }

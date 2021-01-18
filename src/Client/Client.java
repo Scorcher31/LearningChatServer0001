@@ -144,4 +144,12 @@ public class Client {
             gui.errorDialogWindow("Сервисное сообщение: произошла ошибка при отключении.");
         }
     }
+
+    protected void pushMessage() {
+        try {
+            connection.send(new Message(MessageType.TEXT_MESSAGE, gui.getTextField().getText()));
+        } catch (Exception e) {
+            gui.errorDialogWindow("Ошибка при отправки сообщения");
+        }
+    }
 }

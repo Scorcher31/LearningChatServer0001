@@ -7,7 +7,7 @@ import java.util.Map;
 public class ModelGuiServer {
      //модель хранит карту со всеми подключившимися клиентами ключ - имя клиента, значение - объект connecton
      private Map<String, Connection> allUsersMultiChat = new HashMap<>();
-
+     private String name;
 
      protected Map<String, Connection> getAllUsersMultiChat() {
          return allUsersMultiChat;
@@ -20,5 +20,6 @@ public class ModelGuiServer {
      protected void removeUser(String nameUser) {
          allUsersMultiChat.remove(nameUser);
      }
- 
+
+     public String getName() { return name; }
 }
